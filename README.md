@@ -3,6 +3,6 @@ xxx
 hello
 dev
 public void main(){
-
-    s
+    int i=100;
+    System.out.println("i="+i);
 }

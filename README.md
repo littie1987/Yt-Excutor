@@ -3,5 +3,6 @@ xxx
 hello
 dev
 public void main(){
-    System.out.println("hello world");
+    int i=100;
+    System.out.println("i="+i);
 }

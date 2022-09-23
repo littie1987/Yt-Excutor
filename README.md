@@ -3,6 +3,5 @@ xxx
 hello
 dev
 public void main(){
-
-    s
+    System.out.println("hello world");
 }

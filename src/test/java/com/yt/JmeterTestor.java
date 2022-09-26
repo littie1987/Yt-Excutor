@@ -41,7 +41,7 @@ public class JmeterTestor {
     public static LoopController createLoopController() {
         // Loop Controller
         LoopController loopController = new LoopController();
-        loopController.setLoops(-1);
+        loopController.setLoops(1);
         loopController.setContinueForever(true);
         loopController.setProperty(TestElement.TEST_CLASS, LoopController.class.getName());
         loopController.initialize();

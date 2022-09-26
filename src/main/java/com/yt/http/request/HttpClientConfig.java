@@ -56,15 +56,12 @@ public class HttpClientConfig {
         return instance;
     }
 
-    public RequestConfig buildRequestConfig(){
-        RequestConfig requestConfig = RequestConfig.custom()
+    public RequestConfig.Builder buildRequestConfig(){
+        return RequestConfig.custom()
                 .setConnectTimeout(this.connect_timeout)
                 .setConnectionRequestTimeout(this.request_connect_timeout)
                 .setRedirectsEnabled(this.redirect_enable)
-                .setSocketTimeout(this.socket_timeout)
-//                .setLocalAddress(this.localaddress==null?null:InetAddressgetByName(this.localaddress))
-                .build();
-        return requestConfig;
+                .setSocketTimeout(this.socket_timeout);
     }
 
     public void loadProperties(String propertiesFileName){

@@ -22,8 +22,9 @@ public class HttpSample {
     //数据传输超时时间
     private int socket_timeout = HttpClientConfig.getInstance().getSocket_timeout();
 
-    //结果保存目录
-    private String result_save_dir=HttpClientConfig.getInstance().getResponse_save_dir();
+
+    //是否允许重定向
+    private boolean redirect_enable = HttpClientConfig.getInstance().isRedirect_enable();
 
     private String url;
 
@@ -33,6 +34,10 @@ public class HttpSample {
     private List<RequestParam> params;
 
     private List<RequestHeader> headers;
+
+    public HttpSample() {
+
+    }
 
     /**
      * 添加请求参数
@@ -138,5 +143,13 @@ public class HttpSample {
 
     public void setMethod(HttpMethods method) {
         this.method = method;
+    }
+
+    public boolean isRedirect_enable() {
+        return redirect_enable;
+    }
+
+    public void setRedirect_enable(boolean redirect_enable) {
+        this.redirect_enable = redirect_enable;
     }
 }

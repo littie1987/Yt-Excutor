@@ -1,6 +1,7 @@
 package com.yt.http.thread;
 
 import com.yt.http.core.HttpSample;
+import com.yt.http.listener.IResultListener;
 import com.yt.http.request.HttpClientConfig;
 
 import java.time.Duration;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JThreadGroup {
+
+    private String GroupName="Thread-Group-%s";
 
     //线程数量
     private int threads=1;
@@ -23,6 +26,12 @@ public class JThreadGroup {
     //http采样集合
     List<HttpSample> httpSamples = new ArrayList<>();
 
+    //结果监听器集合
+    List<IResultListener> resultListeners = new ArrayList<>();
+
+    public JThreadGroup(){
+
+    }
     public void start(){
 
     }

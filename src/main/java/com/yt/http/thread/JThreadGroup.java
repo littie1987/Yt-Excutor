@@ -3,46 +3,52 @@ package com.yt.http.thread;
 import com.yt.http.core.HttpSample;
 import com.yt.http.listener.IResultListener;
 import com.yt.http.request.HttpClientConfig;
+import com.yt.utils.StrKit;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class JThreadGroup {
+public class JThreadGroup implements Runnable{
 
-    private String GroupName="Thread-Group-%s";
+    private final Map<String, Object> propMap =
+            Collections.synchronizedMap(new LinkedHashMap<String, Object>());
 
-    //线程数量
-    private int threads=1;
+    public static final String LOOP = "JThreadGroup.Loop";
 
-    private int delay = 0;
-    //爬升率
-    private int rampUp = 0;
-    //-1表示无限循环
-    private int loop = 1;
-    //时间间隔
-    private Duration duration = Duration.ofSeconds(0);
+    public static final String RAMP_UP = "JThreadGroup.Rampup";
 
-    private long WAIT_TO_DIE = 60*1000;
+    public static final String Durition = "JThreadGroup.Durition";
 
-    //http采样集合
+    public static final String NumOfThread = "JThreadGroup.NumOfThread";
+
+    public static final String Delay = "JThreadGroup.Delay";
+
+    public static final String Listeners = "JThreadGroup.Delay";
+
+    public static final String Samples = "JThreadGroup.Samples";
+
     List<HttpSample> httpSamples = new ArrayList<>();
 
     //结果监听器集合
     List<IResultListener> resultListeners = new ArrayList<>();
 
+    private long WAIT_TO_DIE = 60*1000;
     //所有线程
-    List<Thread> allThreads = new ArrayList<>();
+    Map<JRequestThread,Thread> allThreads = new ConcurrentHashMap<>();
 
+    //是否运行
     boolean running = false;
 
-    public void registerThread(Thread thread){
-        allThreads.add(thread);
+    int numOfThread = 1;
+
+    public void registerThread(JRequestThread requestThread,Thread thread){
+        allThreads.put(requestThread,thread);
     }
 
     public void stop() {
-        for (Thread item : allThreads) {
+        for (JRequestThread item : allThreads.keySet()) {
             item.stop();
         }
     }
@@ -53,6 +59,7 @@ public class JThreadGroup {
                 try {
                     thread.join(WAIT_TO_DIE);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 if (thread.isAlive()) {
                     stopped = false;
@@ -68,24 +75,24 @@ public class JThreadGroup {
                 try {
                     thread.join(WAIT_TO_DIE);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
-
     /**
      * Wait for all Group Threads to stop
      */
     public void waitThreadsStopped() {
-        for (Thread t : allThreads) {
-            waitThreadStopped(t);
+        for (JRequestThread t : allThreads.keySet()) {
+            waitThreadStopped(allThreads.get(t));
         }
     }
 
     public boolean isThreadAllStoped(){
         boolean stoppedAll = true;
-        for (Thread item : allThreads) {
-            stoppedAll = stoppedAll && verifyThreadStopped(item);
+        for (JRequestThread item : allThreads.keySet()) {
+            stoppedAll = stoppedAll && verifyThreadStopped(allThreads.get(item));
         }
         return stoppedAll;
     }
@@ -100,11 +107,30 @@ public class JThreadGroup {
     public int numberOfActiveThreads() {
         return allThreads.size();
     }
+
     public JThreadGroup(){
 
     }
-    public void start(){
+    public JThreadGroup(int numOfThread){
+        this.numOfThread = numOfThread;
+        this.setProperty(NumOfThread,numOfThread);
+    }
+    public void run(){
 
+        running = true;
+
+        float perThreadDelay = (float)(this.getPropertyInt(RAMP_UP) * 1000) / this.numOfThread;
+
+        for(int i = 0;i<this.numOfThread;i++){
+            JRequestThread jh = new JRequestThread();
+            jh.setDelay((long)(i*perThreadDelay));
+            jh.setThreadNum(i);
+            jh.setThreadGroup(this);
+            Thread thread = new Thread(jh);
+            registerThread(jh,thread);
+            thread.start();
+        }
+        waitThreadsStopped();
     }
 
     public void interupt(){
@@ -113,5 +139,55 @@ public class JThreadGroup {
 
     public void endEvent(){
 
+    }
+
+    public void setProperty(String name,String value){
+        this.propMap.put(name,value);
+    }
+    public void setProperty(String name,int value){
+        this.propMap.put(name,value);
+    }
+    public void setProperty(String name,long value){
+        this.propMap.put(name,value);
+    }
+    public void setProperty(String name,Duration value){
+        this.propMap.put(name,value);
+    }
+    public Integer getPropertyInt(String name){
+        if(this.propMap.containsKey(name)){
+            Object value = this.propMap.get(name);
+            if(StrKit.isInteger(value)){
+                return Integer.parseInt(value.toString());
+            }
+        }
+        return null;
+    }
+
+    public Long getPropertyLong(String name){
+        if(this.propMap.containsKey(name)){
+            Object value = this.propMap.get(name);
+            if(StrKit.isLong(value)){
+                return Long.parseLong(value.toString());
+            }
+        }
+        return null;
+    }
+
+    public List<HttpSample> getHttpSamples() {
+        return httpSamples;
+    }
+
+    public void setHttpSamples(List<HttpSample> httpSamples) {
+        this.httpSamples = httpSamples;
+        this.propMap.put(Samples,httpSamples);
+    }
+
+    public List<IResultListener> getResultListeners() {
+        return resultListeners;
+    }
+
+    public void setResultListeners(List<IResultListener> resultListeners) {
+        this.resultListeners = resultListeners;
+        this.propMap.put(Listeners,resultListeners);
     }
 }

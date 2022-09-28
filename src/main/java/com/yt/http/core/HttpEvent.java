@@ -8,11 +8,29 @@ public class HttpEvent {
 
     private long endTime;
 
-    private String responeCode;
+    HttpSampleResult result;
 
-    private String responseMessage;
+    public long getStartTime() {
+        return startTime;
+    }
 
-    private byte[] responseData;
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
 
-    private Header[] responseHeaders;
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public HttpSampleResult getResult() {
+        return result;
+    }
+
+    public void setResult(HttpSampleResult result) {
+        this.result = result;
+    }
 }

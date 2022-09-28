@@ -22,7 +22,6 @@ public class HttpSample {
     //数据传输超时时间
     private int socket_timeout = HttpClientConfig.getInstance().getSocket_timeout();
 
-
     //是否允许重定向
     private boolean redirect_enable = HttpClientConfig.getInstance().isRedirect_enable();
 

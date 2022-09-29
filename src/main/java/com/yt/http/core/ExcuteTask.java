@@ -28,6 +28,10 @@ public class ExcuteTask {
 
     List<JThreadGroup> groups = new ArrayList<>();
 
+    public ExcuteTask addSample(HttpSample sample){
+        return this;
+    }
+
     public void run(){
         if(numOfThread<0)
             throw new IllegalArgumentException("numOfThread property must >0 ");

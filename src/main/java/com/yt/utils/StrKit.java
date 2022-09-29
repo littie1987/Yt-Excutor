@@ -1,14 +1,45 @@
 package com.yt.utils;
 
+import com.yt.http.core.HttpSample;
+import com.yt.http.core.RequestParam;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StrKit {
 
     public static void main(String[] args) {
+        List<RequestParam> list = new ArrayList<>();
+        list.add(new RequestParam("name","libo"));
+        list.add(new RequestParam("sex","man"));
+        list.add(new RequestParam("age","19"));
+        list.add(new RequestParam("","180"));
 
+        list = list.stream().filter(item->StrKit.isVariableNameRight(item.getName())).collect(Collectors.toList());
+        System.out.println(list.stream().filter(item->item.getName().equals("name")).findFirst().orElse(null));
     }
 
+    public static String trim(String str){
+        if(!isEmpty(str)){
+            return str.trim();
+        }
+        return str;
+    }
+
+    /**
+     * 变量名是否合法
+     * @param variableName
+     * @return
+     */
+    public static boolean isVariableNameRight(String variableName){
+        if(isEmpty(variableName))
+            return false;
+        String regex="^[_a-zA-Z]\\w{1,64}$";
+        return Pattern.matches(regex,variableName);
+    }
     /**
      * null "" " " all act as empty string
      * @param str

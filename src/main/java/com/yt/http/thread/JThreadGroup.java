@@ -173,6 +173,13 @@ public class JThreadGroup implements Runnable{
         return null;
     }
 
+    public Object getPropertyObject(String name){
+        if(this.propMap.containsKey(name)){
+            return this.propMap.get(name);
+        }
+        return null;
+    }
+
     public List<HttpSample> getHttpSamples() {
         return httpSamples;
     }

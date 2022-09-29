@@ -1,5 +1,8 @@
 package com.yt.http.core;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 public class RequestParam {
 
     private String name;
@@ -9,6 +12,10 @@ public class RequestParam {
     public RequestParam(String name,Object value){
         this.name = name;
         this.value = value;
+    }
+
+    public NameValuePair convert2Pair(){
+        return new BasicNameValuePair(getName(), String.valueOf(getValue()));
     }
     public String getName() {
         return name;
@@ -24,5 +31,13 @@ public class RequestParam {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestParam{" +
+                "name='" + name + '\'' +
+                ", value=" + value +
+                '}';
     }
 }

@@ -9,7 +9,5 @@ import java.util.Map;
 
 public interface IHttpService {
 
-    public HttpClient createHttpClient();
-
     public void request(HttpSample sample);
 }

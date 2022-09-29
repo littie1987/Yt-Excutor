@@ -2,7 +2,7 @@ package com.yt.http.core;
 
 import com.yt.http.request.HttpClientConfig;
 import com.yt.http.request.HttpMethods;
-import org.apache.http.entity.mime.Header;
+import com.yt.utils.StrKit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +27,17 @@ public class HttpSample {
 
     private String url;
 
-    private HttpMethods method;
+    private HttpMethodEnum method;
+
+    //协议(http https)
+    private String protocol="http";
 
     //参数
     private List<RequestParam> params;
 
     private List<RequestHeader> headers;
+
+
 
     public HttpSample() {
 
@@ -133,14 +138,14 @@ public class HttpSample {
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = StrKit.trim(url);
     }
 
-    public HttpMethods getMethod() {
+    public HttpMethodEnum getMethod() {
         return method;
     }
 
-    public void setMethod(HttpMethods method) {
+    public void setMethod(HttpMethodEnum method) {
         this.method = method;
     }
 
@@ -150,5 +155,29 @@ public class HttpSample {
 
     public void setRedirect_enable(boolean redirect_enable) {
         this.redirect_enable = redirect_enable;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public List<RequestParam> getParams() {
+        return params;
+    }
+
+    public void setParams(List<RequestParam> params) {
+        this.params = params;
+    }
+
+    public List<RequestHeader> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(List<RequestHeader> headers) {
+        this.headers = headers;
     }
 }

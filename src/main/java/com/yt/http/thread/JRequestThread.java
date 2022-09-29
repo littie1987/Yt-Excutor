@@ -3,6 +3,8 @@ package com.yt.http.thread;
 import com.yt.http.core.HttpSample;
 import com.yt.http.listener.IResultListener;
 import com.yt.http.request.HttpClientConfig;
+import com.yt.http.request.HttpClientServiceImpl;
+import com.yt.http.request.IHttpService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,11 @@ public class JRequestThread implements Runnable{
     //延迟运行时间
     private long delay = 0;
 
+    private IHttpService httpService;
+
+    public JRequestThread(){
+        httpService = new HttpClientServiceImpl();
+    }
     /**
      * 运行http测试
      */
@@ -61,6 +68,8 @@ public class JRequestThread implements Runnable{
 
     public void setThreadGroup(JThreadGroup threadGroup) {
         this.threadGroup = threadGroup;
+        this.httpSamples = (List<HttpSample>) this.threadGroup.getPropertyObject(JThreadGroup.Samples);
+        this.resultListeners = (List<IResultListener>) this.threadGroup.getPropertyObject(JThreadGroup.Listeners);
     }
 
     public void delay(){
@@ -72,19 +81,4 @@ public class JRequestThread implements Runnable{
         }
     }
 
-    public List<HttpSample> getHttpSamples() {
-        return httpSamples;
-    }
-
-    public void setHttpSamples(List<HttpSample> httpSamples) {
-        this.httpSamples = httpSamples;
-    }
-
-    public List<IResultListener> getResultListeners() {
-        return resultListeners;
-    }
-
-    public void setResultListeners(List<IResultListener> resultListeners) {
-        this.resultListeners = resultListeners;
-    }
 }

@@ -1,8 +1,6 @@
 package com.yt.http.request;
 
-import com.yt.http.core.HttpMethodEnum;
-import com.yt.http.core.HttpSample;
-import com.yt.http.core.RequestParam;
+import com.yt.http.core.*;
 import com.yt.utils.StrKit;
 
 import java.util.ArrayList;
@@ -71,7 +69,7 @@ abstract public class AbstractHttpService implements IHttpService{
     /**
      * Get请求，设置url参数
      */
-    public void setGetUrlParams(){
+    public void rebuildUrlParams(){
         if(HttpMethodEnum.GET==httpSample.getMethod()){
             List<RequestParam> urlParams = getUrlParams();
             if(urlParams==null)
@@ -104,5 +102,29 @@ abstract public class AbstractHttpService implements IHttpService{
                 this.url+=_url.toString();
             }
         }
+    }
+
+    protected RequestHeader getHeader(String name){
+        List<RequestHeader> headers = httpSample.getHeaders();
+        RequestHeader header=null;
+        if(headers!=null){
+            header = headers.stream()
+                    .filter(item->item.getName().equals(name))
+                    .findFirst()
+                    .orElse(null);
+        }
+        return header;
+    }
+
+    /**
+     * 获取请求头中的content-type
+     * @return
+     */
+    public ContentTypeEnum getContentType(){
+        RequestHeader header=getHeader("Content-Type");
+        if(header!=null){
+            return ContentTypeEnum.getContentTypeByValue(String.valueOf(header.getValue()));
+        }
+        return null;
     }
 }

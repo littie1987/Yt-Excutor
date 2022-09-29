@@ -3,7 +3,10 @@ package com.yt.http.core;
 import com.yt.http.request.HttpClientConfig;
 import com.yt.http.request.HttpMethods;
 import com.yt.utils.StrKit;
+import org.apache.commons.net.util.Charsets;
 
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,10 @@ public class HttpSample {
 
     private List<RequestHeader> headers;
 
+    //编码
+    private Charset requestEncoding = Charset.defaultCharset();
+
+    private ContentTypeEnum contentType;
 
 
     public HttpSample() {

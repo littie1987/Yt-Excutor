@@ -57,8 +57,9 @@ public class HttpClientServiceImpl extends AbstractHttpService{
             for(RequestParam param : params){
                 pairs.add(param.convert2Pair());
             }
-            if(!pairs.isEmpty())
+            if(!pairs.isEmpty()){
 
+            }
         }
     }
 
